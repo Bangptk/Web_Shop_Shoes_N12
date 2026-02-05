@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>Shop Giày Dép</title>
+    <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Danh sách sản phẩm</h1>
+    <div id="product-list"></div>
+
+    <script>
+        // 1. Kết nối Socket.io để nhận thông báo thời gian thực
+        const socket = io("http://localhost:5000");
+        socket.on('new-order-alert', (data) => {
+            alert("Thông báo: " + data.message);
+        });
+
+        // 2. Gọi API để lấy danh sách giày
+        async function loadProducts() {
+            const response = await fetch('http://localhost:5000/api/products');
+            const products = await response.json();
+            
+            const listDiv = document.getElementById('product-list');
+            listDiv.innerHTML = products.map(p => `
+                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                    <h3>${p.name}</h3>
+                    <p>Giá: ${p.price}đ</p>
+                    <button onclick="buyProduct('${p._id}')">Mua ngay</button>
+                </div>
+            `).join('');
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

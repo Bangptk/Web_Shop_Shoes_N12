@@ -1,0 +1,39 @@
+<form id="add-shoe-form">
+    <input type="text" id="name" placeholder="Tên giày" required>
+    <input type="number" id="price" placeholder="Giá" required>
+    <input type="file" id="shoe-image" accept="image/*" required>
+    
+    <button type="submit">Thêm sản phẩm</button>
+</form>
+
+<script>
+    document.getElementById('add-shoe-form').onsubmit = async (e) => {
+        e.preventDefault();
+
+        // 1. Tạo đối tượng FormData
+        const formData = new FormData();
+        formData.append('name', document.getElementById('name').value);
+        formData.append('price', document.getElementById('price').value);
+        formData.append('image', document.getElementById('shoe-image').files[0]);
+
+        // 2. Lấy token từ localStorage (đã lưu khi login)
+        const token = localStorage.getItem('accessToken');
+
+        // 3. Gửi API
+        const response = await fetch('http://localhost:5000/api/products', {
+            method: 'POST',
+            headers: {
+                // Lưu ý: KHÔNG set 'Content-Type', trình duyệt sẽ tự set kèm boundary cho FormData
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("Thêm giày thành công!");
+        } else {
+            alert("Lỗi: " + result.message);
+        }
+    };
+</script>
