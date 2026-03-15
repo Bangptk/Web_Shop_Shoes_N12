@@ -1,5 +1,6 @@
 # Web_Shop_Shoes_N12
 
+Cấu trúc web:
 frontend/ (src/)
 ├── assets/                  # Tài nguyên tĩnh
 │   ├── images/              # Banner bộ sưu tập, Logo Brand
