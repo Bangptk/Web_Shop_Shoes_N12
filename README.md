@@ -22,3 +22,8 @@ backend/
 ├── models/                  # Schema dữ liệu (Product, Variant, User)
 ├── routes/                  # Định nghĩa API Routes
 └── server.js                # Entry point
+
+Dowload in terminal: npm init -y
+                     npm install express mysql2 cors
+
+
