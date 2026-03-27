@@ -2,7 +2,6 @@
 
 ## Cấu trúc web:
 
-- frontend:
 web-frontend/src/
 ├── assets/                  # Tài nguyên tĩnh
 │   ├── images/              # Banner bộ sưu tập, Logo Brand
@@ -18,7 +17,6 @@ web-frontend/src/
 ├── hooks/                   # Custom hooks (useInventory)
 └── pages/                   # Các trang chính (BrandPage, SizeGuide)
 
-- backend
 backend/
 ├── config/                  # Kết nối Database (MySQL)
 ├── controllers/             # Xử lý Logic (Product, Order)
@@ -44,4 +42,5 @@ backend/
   `npm install lucide-react react-router-dom`
 
 ## Run web:   
-  `npm run dev`
+- backend:  `cd backend`    `node server.js`
+- frontend:  `cd web-frontend`    `npm run dev`
