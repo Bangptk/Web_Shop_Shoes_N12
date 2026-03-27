@@ -24,12 +24,15 @@ backend/
 ├── routes/                  # Định nghĩa API Routes
 └── server.js                # Entry point
 
-## Dowload database in terminal:   `npm init -y`
-                                `npm install express mysql2 cors`
+## Dowload database in terminal:   
+  `npm init -y`
+  `npm install express mysql2 cors`
 
-## Dowload icon:   `npm install lucide-react`
+## Dowload icon:   
+  `npm install lucide-react`
 
-## Dowload web-frontend:   `npm create vite@latest web-frontend -- --template react`
+## Dowload web-frontend:   
+  `npm create vite@latest web-frontend -- --template react`
 
 ## Dowload package:    `cd web-frontend`
                     `npm install`
