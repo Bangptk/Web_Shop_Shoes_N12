@@ -1,7 +1,8 @@
 # Web_Shop_Shoes_N12
 
-Cấu trúc web:
-frontend/ (src/)
+## Cấu trúc web:
+
+web-frontend/src/
 ├── assets/                  # Tài nguyên tĩnh
 │   ├── images/              # Banner bộ sưu tập, Logo Brand
 │   ├── icons/               # Icon thước đo, chất liệu
@@ -23,15 +24,23 @@ backend/
 ├── routes/                  # Định nghĩa API Routes
 └── server.js                # Entry point
 
-Dowload database in terminal:   npm init -y
-                                npm install express mysql2 cors
+## Dowload database in terminal:   
+  `npm init -y`
+  `npm install express mysql2 cors`
 
-Dowload icon:   npm install lucide-react
+## Dowload icon:   
+  `npm install lucide-react`
 
-Dowload web-frontend:   npm create vite@latest web-frontend -- --template react
+## Dowload package:  
+- backend:
+  `cd backtend`
+  `npm install`
+  `npm install lucide-react react-router-dom`
+- frontend:
+  `cd web-frontend`
+  `npm install`
+  `npm install lucide-react react-router-dom`
 
-Dowload package:    cd web-frontend
-                    npm install
-                    npm install lucide-react react-router-dom
-
-Run web:    npm run dev
+## Run web:   
+- backend:  `cd backend`    `node server.js`
+- frontend:  `cd web-frontend`    `npm run dev`
