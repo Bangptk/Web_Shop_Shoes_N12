@@ -25,6 +25,10 @@ function App() {
         {/* 1. NHÓM GIAO DIỆN KHÁCH HÀNG 
             Tất cả các trang này sẽ có Header và Footer chung từ CustomerLayout
         */}
+        {/* path="/login": Trang đăng nhập của khách */}
+
+          <Route path="login" element={<Auth />} />
+
         <Route path="/" element={<CustomerLayout />}>
           {/* path="/" index: Trang chủ hiển thị mặc định */}
           <Route index element={<Home />} /> 
