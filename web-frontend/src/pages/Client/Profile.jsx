@@ -37,7 +37,7 @@ const Profile = () => {
             else if (!nameRegex.test(value)) errorMsg = "Họ tên không hợp lệ (Không chứa số hay ký tự đặc biệt).";
         }
         if (name === 'phone') {
-            const cleanPhone = value.replace(/[\s\-]/g, ''); 
+            const cleanPhone = value.replace(/[\s-]/g, ''); 
             const phoneRegex = /^\+?[0-9]{7,15}$/;
             if (value.trim() !== '' && !phoneRegex.test(cleanPhone)) {
                 errorMsg = "Số điện thoại không hợp lệ (Phải từ 7 đến 15 số, có thể bắt đầu bằng +).";
@@ -117,6 +117,7 @@ const Profile = () => {
             loadProfile(); 
 
         } catch (error) {
+            console.error(error);
             setErrors({ ...errors, submit: "Lỗi hệ thống! Không thể cập nhật lúc này." });
         }
     };
