@@ -97,14 +97,47 @@ app.get('/api/products', (req, res) => {
     const sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC";
     db.query(sql, (err, results) => {
         if (err) return res.status(500).json(err);
-        res.json(results);
+        // Thêm logic tính giá khuyến mãi nếu có discount
+        const productsWithDiscount = results.map(product => ({
+            ...product,
+            price: product.discount ? product.price * (1 - product.discount / 100) : product.price,
+            oldPrice: product.discount ? product.price : null,
+            discount: product.discount || 0
+        }));
+        res.json(productsWithDiscount);
+    });
+});
+
+// --- [PROMOTIONS] SẢN PHẨM KHUYẾN MÃI ---
+app.get('/api/promotions', (req, res) => {
+    const sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.discount > 0 ORDER BY p.id DESC";
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json(err);
+        // Tính giá khuyến mãi
+        const promotions = results.map(product => ({
+            ...product,
+            discounted_price: Number(product.price) * (1 - Number(product.discount) / 100),
+            original_price: Number(product.price),
+            discount: Number(product.discount) || 0
+        }));
+        res.json(promotions);
     });
 });
 
 app.get('/api/products/:id', (req, res) => {
     db.query("SELECT * FROM products WHERE id = ?", [req.params.id], (err, results) => {
         if (err) return res.status(500).json(err);
-        res.json(results[0]);
+        if (!results[0]) return res.status(404).json({ message: 'Product not found' });
+        const product = results[0];
+        const discount = Number(product.discount) || 0;
+        const original_price = Number(product.price);
+        const discounted_price = discount > 0 ? original_price * (1 - discount / 100) : original_price;
+        res.json({
+            ...product,
+            original_price,
+            discounted_price,
+            discount
+        });
     });
 });
 

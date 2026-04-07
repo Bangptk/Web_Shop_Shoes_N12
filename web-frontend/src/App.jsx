@@ -19,6 +19,7 @@ import Success from './pages/Client/Success';
 import MyOrders from './pages/Client/MyOrders';
 import PurchaseHistory from './pages/Client/PurchaseHistory';
 import Profile from './pages/Client/Profile';
+import Promotions from './pages/Client/Promotions';
 
 function App() {
   return (
@@ -32,7 +33,6 @@ function App() {
           <Route path="register" element={<Auth />} />
           <Route path="forgot-password" element={<Auth />} />
         <Route path="/" element={<CustomerLayout />}>
-          s
           {/* Trang chủ hiển thị mặc định */}
           <Route index element={<Home />} /> 
 
@@ -41,19 +41,13 @@ function App() {
           <Route path="checkout" element={<Checkout />} />
           <Route path="success" element={<Success />} />
           <Route path="my-orders" element={<MyOrders />} />
-          <Route path="/purchase-history" element={<PurchaseHistory />} />
-          <Route path="/myorders" element={<MyOrders />} />
+          <Route path="purchase-history" element={<PurchaseHistory />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="promotions" element={<Promotions />} />
 
           {/* Sau này bạn có thể thêm: 
               <Route path="products" element={<ProductList />} /> 
           */}
-          {/* 2. THÊM ĐƯỜNG DẪN CHO TRANG PROFILE */}
-          <Route path="profile" element={<Profile />} />
-          <Route path="purchase-history" element={<PurchaseHistory />} />
-
-          {/* 3. CÁC ĐƯỜNG DẪN XỬ LÝ TÀI KHOẢN (Dùng chung component Auth) */}
-
         </Route>
 
         {/* ==========================================

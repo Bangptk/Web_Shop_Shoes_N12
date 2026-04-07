@@ -86,6 +86,12 @@ const CustomerLayout = () => {
                 <span>Giỏ hàng</span>
               </Link>
 
+              {/* Nút Khuyến mãi */}
+              <Link to="/promotions" style={styles.navLink}>
+                <span style={{ fontSize: '22px' }}>🏷️</span>
+                <span>Khuyến mãi</span>
+              </Link>
+
               {/* Nút Lịch sử */}
               <Link to="/purchase-history" style={styles.navLink}>
                 <span style={{ fontSize: '22px' }}>📜</span>
