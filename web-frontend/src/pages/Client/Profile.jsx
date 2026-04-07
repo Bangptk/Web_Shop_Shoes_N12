@@ -37,7 +37,6 @@ const Profile = () => {
             else if (!nameRegex.test(value)) errorMsg = "Họ tên không hợp lệ (Không chứa số hay ký tự đặc biệt).";
         }
         if (name === 'phone') {
-            // Cho phép số quốc tế (+), độ dài 7-15 số. (Xóa khoảng trắng/gạch ngang lúc check để linh hoạt hơn)
             const cleanPhone = value.replace(/[\s\-]/g, ''); 
             const phoneRegex = /^\+?[0-9]{7,15}$/;
             if (value.trim() !== '' && !phoneRegex.test(cleanPhone)) {
@@ -217,19 +216,16 @@ const styles = {
     label: { display: 'block', fontWeight: '600', color: '#34495e', fontSize: '14px' },
     req: { color: '#e74c3c' },
     
-    // Inputs
     input: { width: '100%', padding: '12px 15px', border: '1px solid #3498db', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', outline: 'none', backgroundColor: '#fff', transition: 'border 0.3s' },
     inputDisabled: { width: '100%', padding: '12px 15px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', backgroundColor: '#fdfdfd', color: '#555' },
     inputLocked: { width: '100%', padding: '12px 15px', border: '1px solid #dcdde1', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', backgroundColor: '#f1f2f6', color: '#7f8fa6', cursor: 'not-allowed', fontWeight: '500' },
     textarea: { width: '100%', padding: '12px 15px', border: '1px solid #3498db', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', resize: 'vertical', outline: 'none' },
     textareaDisabled: { width: '100%', padding: '12px 15px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box', resize: 'vertical', backgroundColor: '#fdfdfd', color: '#555' },
     
-    // MÀU LỖI ĐẬM, TO RÕ RÀNG
     errorText: { color: '#c0392b', fontSize: '13px', fontWeight: 'bold', marginTop: '2px', display: 'block' },
     errorTextCenter: { color: '#c0392b', fontSize: '13px', fontWeight: 'bold', marginTop: '5px', textAlign: 'center' },
     serverError: { padding: '10px', backgroundColor: '#fdf3f2', border: '1px solid #fadbd8', color: '#c0392b', borderRadius: '8px', fontSize: '14px', textAlign: 'center', marginBottom: '15px', fontWeight: 'bold' },
     
-    // Buttons & Avatar
     buttonGroup: { display: 'flex', gap: '15px', marginTop: '20px', justifyContent: 'center' },
     editButton: { backgroundColor: '#e67e22', color: 'white', border: 'none', padding: '14px 30px', borderRadius: '8px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', width: '100%' },
     saveButton: { backgroundColor: '#27ae60', color: 'white', border: 'none', padding: '14px 20px', borderRadius: '8px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', flex: 1 },
