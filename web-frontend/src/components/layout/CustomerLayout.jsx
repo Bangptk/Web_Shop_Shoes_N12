@@ -76,18 +76,6 @@ const CustomerLayout = () => {
           </div>
           
           <div style={styles.menu}>
-            
-            {user && (
-              <>
-                <Link to="/purchase-history" style={styles.navItem}>
-                  📜 Lịch sử mua
-                </Link>
-                <Link to="/profile" style={styles.navItem}>
-                  👤 Tài khoản
-                </Link>
-              </>
-            )}
-            
             <Link to="/cart" style={styles.cartWrapper}>
               <span style={{ fontSize: '22px' }}>🛒</span>
               {cartCount > 0 && <span style={styles.cartBadge}>{cartCount}</span>}
