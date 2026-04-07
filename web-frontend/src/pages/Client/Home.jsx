@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const location = useLocation();
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
       .then(res => setProducts(res.data))
@@ -23,18 +23,7 @@ const Home = () => {
 
   // 2. Hàm thêm vào giỏ hàng (Chỉ dành cho nút "Thêm vào giỏ")
   const addToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingItem = cart.find(item => item.id === product.id);
-    
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('storage')); 
-    alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+    navigate(`/product/${product.id}`); 
   };
 
   return (

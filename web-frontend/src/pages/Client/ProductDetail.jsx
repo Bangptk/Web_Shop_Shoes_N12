@@ -32,20 +32,15 @@ const ProductDetail = () => {
     };
 
     if (isBuyNow) {
-      /**
-       * LUỒNG MUA NGAY:
-       * Chuyển hướng sang Checkout và đính kèm thông tin sản phẩm này qua 'state'.
-       * Cách này giúp trang Checkout biết bạn chỉ muốn mua DUY NHẤT món này,
-       * không liên quan đến giỏ hàng hiện có trong localStorage.
-       */
+      
       navigate('/checkout', { state: { buyNowItem: currentItem } });
     } else {
-      /**
-       * LUỒNG THÊM GIỎ HÀNG:
-       * Lưu vào localStorage như bình thường.
-       */
+      
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingIndex = cart.findIndex(item => item.id === product.id && item.size === selectedSize);
+      
+      const existingIndex = cart.findIndex(item => 
+        item.id === product.id && String(item.size) === String(selectedSize)
+      );
 
       if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
@@ -54,8 +49,10 @@ const ProductDetail = () => {
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
+      
       window.dispatchEvent(new Event('storage'));
-      alert(`Đã thêm ${product.name} - Size ${selectedSize} vào giỏ hàng!`);
+      
+      alert(`Đã thêm ${product.name} (Size: ${selectedSize}) vào giỏ hàng!`);
     }
   };
 

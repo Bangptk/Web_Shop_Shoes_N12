@@ -24,7 +24,6 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
-<<<<<<< HEAD
         const [rows] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
         if (rows.length > 0) {
             res.json({
@@ -33,34 +32,11 @@ exports.login = async (req, res) => {
                     id: user.id, 
                     email: user.email, 
                     fullname: user.fullname, 
-                    role: user.role 
+                    role: user.role,
+                    avatar: user.avatar,
+                    city: user.city,
                 }
             });
-=======
-        const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-        
-        if (rows.length > 0) {
-            const user = rows[0];
-            // 2. So sánh mật khẩu đã hash
-            const match = await bcrypt.compare(password, user.password);
-            
-            if (match) {
-                // 3. Tạo Token chứa thông tin user
-                const token = jwt.sign(
-                    { id: user.id, fullname: user.fullname, role: user.role }, 
-                    JWT_SECRET, 
-                    { expiresIn: '1d' } // Token sống 1 ngày
-                );
-                
-                res.json({
-                    message: "Đăng nhập thành công",
-                    user: { id: user.id, fullname: user.fullname, role: user.role, avatar: user.avatar },
-                    token: token
-                });
-            } else {
-                res.status(401).json({ message: "Mật khẩu không đúng" });
-            }
->>>>>>> 9eb5109a66d68cb26697e7aeea24c4ee8fc433f2
         } else {
             res.status(401).json({ message: "Email không tồn tại" });
         }
