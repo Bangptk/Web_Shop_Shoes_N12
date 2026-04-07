@@ -61,8 +61,8 @@ const Profile = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                setErrors({ ...errors, avatar: "File ảnh quá lớn! Vui lòng chọn ảnh dưới 2MB." });
+            if (file.size > 5 * 1024 * 1024) {
+                setErrors({ ...errors, avatar: "File ảnh quá lớn! Vui lòng chọn ảnh dưới 5MB." });
                 e.target.value = ''; 
                 setAvatarFile(null);
                 return;
