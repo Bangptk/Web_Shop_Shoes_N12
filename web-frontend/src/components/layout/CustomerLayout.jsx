@@ -94,25 +94,23 @@ const CustomerLayout = () => {
               </button>
             </form>
 
-<<<<<<< HEAD
-              {/* Nút Khuyến mãi */}
-              <Link to="/promotions" style={styles.navLink}>
-                <span style={{ fontSize: '22px' }}>🏷️</span>
-                <span>Khuyến mãi</span>
-              </Link>
+            {/* Nút Khuyến mãi */}
+            <Link to="/promotions" style={styles.navLink}>
+              <span style={{ fontSize: '22px' }}>🏷️</span>
+              <span>Khuyến mãi</span>
+            </Link>
 
-              {/* Nút Lịch sử */}
-              <Link to="/purchase-history" style={styles.navLink}>
-                <span style={{ fontSize: '22px' }}>📜</span>
-                <span>Lịch sử</span>
-              </Link>
-=======
+            {/* Nút Lịch sử */}
+            <Link to="/purchase-history" style={styles.navLink}>
+              <span style={{ fontSize: '22px' }}>📜</span>
+              <span>Lịch sử</span>
+            </Link>
+
             {/* GIỎ HÀNG */}
             <Link to="/cart" style={styles.cartWrapper}>
               <ShoppingCart size={24} color="#333" />
               {cartCount > 0 && <span style={styles.cartBadge}>{cartCount}</span>}
             </Link>
->>>>>>> c4ffe714c96b3aea475d6150d2b95a62fd75d878
 
             {/* KHU VỰC USER (DROPDOWN) */}
             <div style={styles.authSection}>
