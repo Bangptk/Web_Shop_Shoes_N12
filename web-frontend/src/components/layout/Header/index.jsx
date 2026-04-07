@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Search, User } from 'lucide-react'; // Sử dụng icon cho xịn
+import { ShoppingCart, Search, User, History } from 'lucide-react'; // Sử dụng icon cho xịn
 
 const Header = () => {
   return (
@@ -23,6 +23,9 @@ const Header = () => {
         <Link to="/cart" className="cart-icon">
           <ShoppingCart />
           <span className="cart-count">0</span>
+        </Link>
+        <Link to="/purchase-history" className="history-icon" title="Lịch sử mua hàng">
+          <History size={20} />
         </Link>
         <Link to="/profile"><User /></Link>
       </div>

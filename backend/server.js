@@ -60,7 +60,7 @@ const upload = multer({ storage: storage });
 // --- [USER] ĐĂNG NHẬP & ĐĂNG KÝ ---
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    db.query("SELECT id, fullname, role FROM users WHERE email = ? AND password = ?", [email, password], (err, results) => {
+    db.query("SELECT id, fullname, email, role FROM users WHERE email = ? AND password = ?", [email, password], (err, results) => {
         if (err) return res.status(500).json({ message: "Lỗi hệ thống" });
         if (results.length > 0) res.json({ message: "Đăng nhập thành công", user: results[0] });
         else res.status(401).json({ message: "Email hoặc mật khẩu không đúng!" });

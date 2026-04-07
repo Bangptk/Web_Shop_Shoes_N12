@@ -19,12 +19,15 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const [rows] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
-        
         if (rows.length > 0) {
-            const user = rows[0];
             res.json({
                 message: "Đăng nhập thành công",
-                user: { id: user.id, fullname: user.fullname, role: user.role }
+                user: { 
+                    id: user.id, 
+                    email: user.email, 
+                    fullname: user.fullname, 
+                    role: user.role 
+                }
             });
         } else {
             res.status(401).json({ message: "Email hoặc mật khẩu không đúng" });

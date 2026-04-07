@@ -17,6 +17,8 @@ import Cart from './pages/Client/Cart';
 import Checkout from './pages/Client/Checkout';
 import Success from './pages/Client/Success'; 
 import MyOrders from './pages/Client/MyOrders';
+import PurchaseHistory from './pages/Client/PurchaseHistory';
+import Profile from './pages/Client/Profile';
 
 function App() {
   return (
@@ -41,6 +43,10 @@ function App() {
           <Route path="success" element={<Success />} />
           
           <Route path="my-orders" element={<MyOrders />} />
+
+          <Route path="purchase-history" element={<PurchaseHistory />} />
+
+          <Route path="profile" element={<Profile />} />
 
           {/* Sau này bạn có thể thêm: 
               <Route path="products" element={<ProductList />} /> 
