@@ -11,10 +11,22 @@ const DiscountManagement = () => {
     fetchProducts();
   }, []);
 
+  const getToken = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user?.token || localStorage.getItem('token');
+  };
+
+  // 2. SỬA HÀM LẤY SẢN PHẨM (GET -> Token ở tham số thứ 2)
   const fetchProducts = () => {
-    axios.get('http://localhost:5000/api/products')
+    const token = getToken();
+
+    axios.get('http://localhost:5000/api/products', {
+      headers: { Authorization: `Bearer ${token}` } 
+    })
       .then(res => {
-        setProducts(res.data.data);
+        // Bọc mảng an toàn để đề phòng lỗi "map is not a function"
+        const dataList = res.data.data || res.data;
+        setProducts(Array.isArray(dataList) ? dataList : []);
         setLoading(false);
       })
       .catch(err => {
@@ -23,39 +35,51 @@ const DiscountManagement = () => {
       });
   };
 
+  // 3. SỬA HÀM CẬP NHẬT GIẢM GIÁ (PUT -> Token ở tham số thứ 3)
   const handleSetDiscount = async (productId) => {
     try {
-      await axios.put(`http://localhost:5000/api/products/${productId}/discount`, {
-        discount: discountValue
-      });
+      const token = getToken();
+
+      await axios.put(
+        `http://localhost:5000/api/products/${productId}/discount`, 
+        { discount: discountValue }, // Body data
+        { headers: { Authorization: `Bearer ${token}` } } // Headers
+      );
+      
       alert("Cập nhật giảm giá thành công!");
       fetchProducts(); // Refresh danh sách
       setSelectedProduct(null);
       setDiscountValue(0);
     } catch (err) {
-      console.error("Lỗi cập nhật giảm giá:", err);
-      alert("Lỗi cập nhật giảm giá!");
+      console.error("Lỗi cập nhật giảm giá:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Lỗi cập nhật giảm giá!");
     }
   };
 
+  // 4. SỬA HÀM XÓA GIẢM GIÁ (PUT -> Token ở tham số thứ 3)
   const handleRemoveDiscount = async (productId) => {
     try {
-      await axios.put(`http://localhost:5000/api/products/${productId}/discount`, {
-        discount: 0
-      });
+      const token = getToken();
+
+      await axios.put(
+        `http://localhost:5000/api/products/${productId}/discount`, 
+        { discount: 0 }, // Body data set về 0
+        { headers: { Authorization: `Bearer ${token}` } } // Headers
+      );
+
       alert("Đã xóa giảm giá!");
       fetchProducts();
     } catch (err) {
-      console.error("Lỗi xóa giảm giá:", err);
-      alert("Lỗi xóa giảm giá!");
+      console.error("Lỗi xóa giảm giá:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Lỗi xóa giảm giá!");
     }
   };
 
+  // 5. HÀM MỞ MODAL KHÔNG GỌI API NÊN GIỮ NGUYÊN
   const openDiscountModal = (product) => {
     setSelectedProduct(product);
     setDiscountValue(product.discount || 0);
   };
-
   if (loading) return <div>Đang tải...</div>;
 
   return (

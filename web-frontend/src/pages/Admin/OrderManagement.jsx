@@ -10,28 +10,51 @@ const OrderManagement = () => {
     fetchOrders();
   }, []);
 
+  const getToken = () => {
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user?.token || localStorage.getItem('token'); 
+  };
+
   const fetchOrders = () => {
-    axios.get('http://localhost:5000/api/orders')
-      .then(res => setOrders(res.data.data))
-      .catch(err => console.error("Lỗi lấy danh sách đơn hàng:", err));
+    const token = getToken();
+    
+    axios.get('http://localhost:5000/api/orders', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => setOrders(res.data.data || res.data))
+    .catch(err => console.error("Lỗi lấy danh sách đơn hàng:", err));
   };
 
   const updateStatus = async (id, newStatus) => {
+    const token = getToken();
+
     try {
-      await axios.put(`http://localhost:5000/api/orders/${id}/status`, { status: newStatus });
+    
+      await axios.put(
+        `http://localhost:5000/api/orders/${id}/status`, 
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } } 
+      );
       fetchOrders();
     } catch (error) {
       alert("Lỗi cập nhật trạng thái!");
+      console.error(error);
     }
   };
 
   const viewOrderDetails = async (orderId) => {
+    const token = getToken();
+
     try {
-      const res = await axios.get(`http://localhost:5000/api/orders/${orderId}/details`);
-      setSelectedOrderDetails(res.data.data);
+      const res = await axios.get(`http://localhost:5000/api/orders/${orderId}/details`, {
+        headers: { Authorization: `Bearer ${token}` } // <--- THÊM TOKEN Ở ĐÂY
+      });
+      setSelectedOrderDetails(res.data.data || res.data);
       setShowDetailsModal(true);
     } catch (error) {
       alert("Không thể lấy chi tiết đơn hàng này!");
+      console.error(error);
     }
   };
 

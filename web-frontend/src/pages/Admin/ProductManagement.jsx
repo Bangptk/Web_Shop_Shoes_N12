@@ -53,21 +53,42 @@ const ProductManagement = () => {
     if (file) formData.append('image', file);
 
     try {
+      // 1. LẤY TOKEN TỪ LOCALSTORAGE
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = user?.token || localStorage.getItem('token');
+
+      // 2. TẠO CONFIG CHỨA HEADERS (Axios sẽ tự động hiểu đây là multipart/form-data)
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      // 3. GỬI REQUEST CÓ KÈM CONFIG (TOKEN)
       if (isEdit) {
-        await axios.put(`http://localhost:5000/api/products/${currentProduct.id}`, formData);
+        await axios.put(`http://localhost:5000/api/products/${currentProduct.id}`, formData, config);
       } else {
-        await axios.post('http://localhost:5000/api/products', formData);
+        await axios.post('http://localhost:5000/api/products', formData, config);
       }
+      
       setShowModal(false);
       fetchProducts();
+      alert(isEdit ? "Cập nhật thành công!" : "Thêm giày mới thành công!"); // Báo thành công cho sướng
+      
     } catch (error) {
-      alert("Lỗi thao tác!");
+      // In lỗi chi tiết ra console để sau này dễ fix
+      console.error("Lỗi chi tiết từ Server:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Lỗi thao tác! Vui lòng bấm F12 xem Console.");
     }
   };
 
   const deleteProduct = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await axios.delete(`http://localhost:5000/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       fetchProducts();
     }
   };

@@ -23,12 +23,27 @@ const CategoryManagement = () => {
   // 3. Hàm thêm danh mục
   const handleAdd = async () => {
     if (!newCategory.name) return alert("Vui lòng nhập tên danh mục");
+    
     try {
-      await axios.post('http://localhost:5000/api/categories', newCategory);
-      setNewCategory({ name: '', description: '' }); // Xóa trắng ô input sau khi thêm
-      fetchCategories(); // Load lại danh sách
+      // 1. Lấy token
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = user?.token || localStorage.getItem('token');
+
+      // 2. Gửi request kèm Header Authorization
+      await axios.post(
+        'http://localhost:5000/api/categories', 
+        newCategory, // Tham số thứ 2: Dữ liệu gửi đi
+        { 
+          headers: { Authorization: `Bearer ${token}` } // Tham số thứ 3: Cấu hình (Headers)
+        }
+      );
+
+      setNewCategory({ name: '', description: '' });
+      fetchCategories();
+      alert("Thêm danh mục thành công!");
     } catch (err) {
-      alert("Lỗi khi thêm danh mục!");
+      console.error("Lỗi thêm danh mục:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Lỗi khi thêm danh mục!");
     }
   };
 
@@ -36,7 +51,14 @@ const CategoryManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc muốn xóa danh mục này?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/categories/${id}`);
+        // 1. Lấy token
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token = user?.token || localStorage.getItem('token');
+
+        // 2. Gửi request kèm Header Authorization
+        await axios.delete(`http://localhost:5000/api/categories/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         fetchCategories();
       } catch (err) {
         alert("Không thể xóa danh mục này (có thể đang có sản phẩm thuộc danh mục này)");

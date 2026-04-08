@@ -11,10 +11,13 @@ const Dashboard = () => {
     shippingOrders: 0,
     completedOrders: 0 
   });
-
+  const user = JSON.parse(localStorage.getItem('user'));
+  const token = user?.token || localStorage.getItem('token');
   useEffect(() => {
     // SỬA LỖI TẠI ĐÂY: Đổi từ /stats thành /status cho khớp với server.js
-    axios.get('http://localhost:5000/api/admin/status') 
+    axios.get('http://localhost:5000/api/admin/status', {
+        headers: { Authorization: `Bearer ${token}` } // <--- Bổ sung Headers vào đây
+    })
       .then(res => setStats(res.data.data))
       .catch(err => console.log("Lỗi lấy thống kê:", err));
   }, []);
