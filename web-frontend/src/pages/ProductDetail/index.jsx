@@ -1,4 +1,3 @@
-// src/pages/ProductDetail/index.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import productApi from '../../api/productApi';
@@ -12,7 +11,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity] = useState(1); // ✅ bỏ setQuantity để hết warning
 
   // Hàm thêm vào giỏ hàng
   const addToCart = (product, selectedColor, selectedSize, quantity) => {
@@ -49,11 +48,21 @@ const ProductDetail = () => {
   // Lấy dữ liệu từ MySQL thông qua API
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await productApi.getDetail(id);
-      setProduct(res.data);
-      // Mặc định chọn màu đầu tiên
-      setSelectedColor(res.data.variants[0].color);
+      try {
+        const res = await productApi.getDetail(id);
+        const data = res.data;
+
+        setProduct(data);
+
+        // ✅ tránh crash nếu variants rỗng
+        if (data?.variants?.length > 0) {
+          setSelectedColor(data.variants[0].color);
+        }
+      } catch (error) {
+        console.error(error); // ✅ fix eslint
+      }
     };
+
     fetchProduct();
   }, [id]);
 
@@ -61,31 +70,35 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-container">
-      {/* Cột trái: Gallery Ảnh */}
+      
+      {/* Cột trái */}
       <div className="product-images">
         <img src={product.image_main} alt={product.name} className="main-image" />
+
         <div className="thumbnail-list">
-          {product.images.map(img => <img src={img.url} key={img.id} />)}
+          {product.images?.map(img => (
+            <img src={img.url} key={img.id} alt="" />
+          ))}
         </div>
       </div>
 
-      {/* Cột phải: Thông tin mua hàng */}
+      {/* Cột phải */}
       <div className="product-info">
         <p className="brand-name">{product.brand_name}</p>
         <h1>{product.name}</h1>
-        <h2 className="price">{product.price.toLocaleString()}đ</h2>
+        <h2 className="price">{product.price?.toLocaleString()}đ</h2>
 
-        {/* 1. Chọn Màu sắc */}
+        {/* Color */}
         <ColorSelector 
           variants={product.variants} 
           selectedColor={selectedColor}
           onChange={(color) => {
             setSelectedColor(color);
-            setSelectedSize(null); // Reset size khi đổi màu
+            setSelectedSize(null);
           }}
         />
 
-        {/* 2. Chọn Size (Chỉ hiện size của màu đã chọn) */}
+        {/* Size */}
         <SizePicker 
           variants={product.variants}
           selectedColor={selectedColor}
@@ -93,7 +106,7 @@ const ProductDetail = () => {
           onSelect={setSelectedSize}
         />
 
-        {/* 3. Nút hành động */}
+        {/* Action */}
         <div className="actions">
           <button 
             disabled={!selectedSize}
@@ -107,3 +120,5 @@ const ProductDetail = () => {
     </div>
   );
 };
+
+export default ProductDetail; // ✅ bắt buộc có
