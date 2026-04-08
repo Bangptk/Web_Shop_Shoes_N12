@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getAuthConfig } from '../../api/authApi';
 
 const CategoryManagement = () => {
   // 1. Khai báo tất cả State bên trong Component
@@ -11,7 +12,7 @@ const CategoryManagement = () => {
       const res = await axios.get('http://localhost:5000/api/categories');
       setCategories(res.data.data);
     } catch {
-      console.error("Lỗi thêm danh mục");
+      console.error("Lỗi lấy danh sách danh mục");
     }
   };
 
@@ -24,7 +25,7 @@ const CategoryManagement = () => {
   const handleAdd = async () => {
     if (!newCategory.name) return alert("Vui lòng nhập tên danh mục");
     try {
-      await axios.post('http://localhost:5000/api/categories', newCategory);
+      await axios.post('http://localhost:5000/api/categories', newCategory, getAuthConfig());
       setNewCategory({ name: '', description: '' }); // Xóa trắng ô input sau khi thêm
       fetchCategories(); // Load lại danh sách
     } catch {
@@ -36,7 +37,7 @@ const CategoryManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc muốn xóa danh mục này?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/categories/${id}`);
+        await axios.delete(`http://localhost:5000/api/categories/${id}`, getAuthConfig());
         fetchCategories();
       } catch {
         alert("Không thể xóa danh mục này (có thể đang có sản phẩm thuộc danh mục này)");

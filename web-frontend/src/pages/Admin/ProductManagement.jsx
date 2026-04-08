@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getAuthConfig } from '../../api/authApi';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
@@ -54,9 +55,9 @@ const ProductManagement = () => {
 
     try {
       if (isEdit) {
-        await axios.put(`http://localhost:5000/api/products/${currentProduct.id}`, formData);
+        await axios.put(`http://localhost:5000/api/products/${currentProduct.id}`, formData, getAuthConfig());
       } else {
-        await axios.post('http://localhost:5000/api/products', formData);
+        await axios.post('http://localhost:5000/api/products', formData, getAuthConfig());
       }
       setShowModal(false);
       fetchProducts();
@@ -67,7 +68,7 @@ const ProductManagement = () => {
 
   const deleteProduct = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await axios.delete(`http://localhost:5000/api/products/${id}`, getAuthConfig());
       fetchProducts();
     }
   };

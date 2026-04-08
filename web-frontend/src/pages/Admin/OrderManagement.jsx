@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getAuthConfig } from '../../api/authApi';
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -7,7 +8,7 @@ const OrderManagement = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const fetchOrders = () => {
-    axios.get('http://localhost:5000/api/orders')
+    axios.get('http://localhost:5000/api/orders', getAuthConfig())
       .then(res => setOrders(res.data.data))
       .catch(error => console.error("Lỗi lấy danh sách đơn hàng:", error));
   };
@@ -18,7 +19,7 @@ const OrderManagement = () => {
 
   const updateStatus = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/orders/${id}/status`, { status: newStatus });
+      await axios.put(`http://localhost:5000/api/orders/${id}/status`, { status: newStatus }, getAuthConfig());
       fetchOrders();
     } catch {
       alert("Lỗi cập nhật trạng thái!");
@@ -27,7 +28,7 @@ const OrderManagement = () => {
 
   const viewOrderDetails = async (orderId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/orders/${orderId}/details`);
+      const res = await axios.get(`http://localhost:5000/api/orders/${orderId}/details`, getAuthConfig());
       setSelectedOrderDetails(res.data.data);
       setShowDetailsModal(true);
     } catch {

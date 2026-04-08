@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getAuthConfig } from '../../api/authApi';
 
 const DiscountManagement = () => {
   const [products, setProducts] = useState([]);
@@ -27,7 +28,7 @@ const DiscountManagement = () => {
     try {
       await axios.put(`http://localhost:5000/api/products/${productId}/discount`, {
         discount: discountValue
-      });
+      }, getAuthConfig());
       alert("Cập nhật giảm giá thành công!");
       fetchProducts(); // Refresh danh sách
       setSelectedProduct(null);
@@ -42,7 +43,7 @@ const DiscountManagement = () => {
     try {
       await axios.put(`http://localhost:5000/api/products/${productId}/discount`, {
         discount: 0
-      });
+      }, getAuthConfig());
       alert("Đã xóa giảm giá!");
       fetchProducts();
     } catch (error) {

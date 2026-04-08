@@ -33,3 +33,10 @@ export const loginAdmin = async (credentials) => {
     const response = await axios.post(`${API_URL}/login`, credentials);
     return response.data.data;
 };
+
+export const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+};

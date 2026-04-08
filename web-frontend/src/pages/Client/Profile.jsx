@@ -25,7 +25,7 @@ const Profile = () => {
     const loadProfile = async () => {
         try {
             const response = await getProfile();
-            setProfile(response.user);
+            setProfile(response);
         } catch (error) {
             console.error('Lỗi tải profile:', error);
         } finally {
