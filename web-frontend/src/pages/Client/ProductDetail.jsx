@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate(); 
+  const location = useLocation();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const sizes = [38, 39, 40, 41, 42, 43]; 
@@ -15,37 +16,38 @@ const ProductDetail = () => {
       .catch(err => console.error("Lỗi lấy chi tiết sản phẩm:", err));
   }, [id]);
 
+  // Kiểm tra nếu truy cập từ trang khuyến mãi
+  const isFromPromotions = location.search.includes('from=promotions');
+
+  const displayPrice = isFromPromotions && product?.discount > 0 
+    ? Number(product.discounted_price ?? product.price) 
+    : Number(product?.price ?? 0);
+  const originalPrice = Number(product?.original_price ?? product?.price ?? 0);
+
   const handleAddToCart = (isBuyNow = false) => {
     if (!selectedSize) {
       alert("Vui lòng chọn Size giày trước khi tiếp tục!");
       return;
     }
 
-    // Tạo đối tượng sản phẩm hiện tại
     const currentItem = {
       id: product.id,
       name: product.name,
-      price: product.price,
+      price: displayPrice,
       image_url: product.image_url,
-      size: selectedSize, 
-      quantity: 1
+      size: selectedSize,
+      quantity: 1,
+      discount: isFromPromotions ? Number(product.discount) || 0 : 0,
+      original_price: isFromPromotions ? originalPrice : displayPrice
     };
 
     if (isBuyNow) {
-      /**
-       * LUỒNG MUA NGAY:
-       * Chuyển hướng sang Checkout và đính kèm thông tin sản phẩm này qua 'state'.
-       * Cách này giúp trang Checkout biết bạn chỉ muốn mua DUY NHẤT món này,
-       * không liên quan đến giỏ hàng hiện có trong localStorage.
-       */
       navigate('/checkout', { state: { buyNowItem: currentItem } });
     } else {
-      /**
-       * LUỒNG THÊM GIỎ HÀNG:
-       * Lưu vào localStorage như bình thường.
-       */
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingIndex = cart.findIndex(item => item.id === product.id && item.size === selectedSize);
+      const existingIndex = cart.findIndex(item => 
+        item.id === product.id && String(item.size) === String(selectedSize)
+      );
 
       if (existingIndex > -1) {
         cart[existingIndex].quantity += 1;
@@ -55,7 +57,7 @@ const ProductDetail = () => {
 
       localStorage.setItem('cart', JSON.stringify(cart));
       window.dispatchEvent(new Event('storage'));
-      alert(`Đã thêm ${product.name} - Size ${selectedSize} vào giỏ hàng!`);
+      alert(`Đã thêm ${product.name} (Size: ${selectedSize}) vào giỏ hàng!`);
     }
   };
 
@@ -75,7 +77,12 @@ const ProductDetail = () => {
         <div style={styles.infoSection}>
           <p style={styles.category}>{product.category_name || 'SNEAKERS'}</p>
           <h1 style={styles.title}>{product.name}</h1>
-          <p style={styles.price}>{Number(product.price).toLocaleString()}đ</p>
+          <div style={styles.priceRow}>
+            <p style={styles.price}>{displayPrice.toLocaleString()}đ</p>
+            {isFromPromotions && product.discount > 0 && (
+              <p style={styles.oldPrice}>{originalPrice.toLocaleString()}đ</p>
+            )}
+          </div>
           
           <div style={styles.divider}></div>
 
@@ -129,7 +136,9 @@ const styles = {
   infoSection: { flex: 1, minWidth: '350px' },
   category: { color: '#aaa', textTransform: 'uppercase', fontSize: '14px', fontWeight: 'bold' },
   title: { fontSize: '32px', margin: '10px 0', color: '#2d3436', fontWeight: 'bold' },
-  price: { fontSize: '28px', color: '#e67e22', fontWeight: 'bold' },
+  priceRow: { display: 'flex', alignItems: 'center', gap: '15px', margin: '10px 0' },
+  price: { fontSize: '28px', color: '#e67e22', fontWeight: 'bold', margin: 0 },
+  oldPrice: { fontSize: '18px', color: '#888', textDecoration: 'line-through', margin: 0 },
   divider: { height: '1px', background: '#eee', margin: '20px 0' },
   description: { lineHeight: '1.6', color: '#636e72' },
   sizeGrid: { display: 'flex', gap: '10px', flexWrap: 'wrap' },

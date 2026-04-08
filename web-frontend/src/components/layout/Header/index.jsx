@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Search, User, LogOut } from 'lucide-react';
+import { ShoppingCart, Search, User, LogOut, Tag, Clock } from 'lucide-react';
 
 const Header = () => {
   const [user, setUser] = useState(null);
@@ -39,7 +39,7 @@ const Header = () => {
       <ul className="nav-links" style={styles.navLinks}>
         <li style={styles.li}><Link to="/shop" style={styles.link}>Cửa hàng</Link></li>
         <li style={styles.li}><Link to="/brands" style={styles.link}>Thương hiệu</Link></li>
-        <li style={styles.li}><Link to="/sale" style={styles.link}>Giảm giá</Link></li>
+        <li style={styles.li}><Link to="/promotions" style={styles.link}>Khuyến mãi</Link></li>
       </ul>
 
       <div className="header-actions" style={styles.headerActions}>
@@ -48,6 +48,16 @@ const Header = () => {
           <Search size={20} color="#666" style={{ cursor: 'pointer' }} />
         </div>
         
+        <Link to="/promotions" style={styles.iconLabelLink}>
+          <Tag size={22} color="#333" />
+          <span style={styles.iconLabel}>Khuyến mãi</span>
+        </Link>
+
+        <Link to="/purchase-history" style={styles.iconLabelLink}>
+          <Clock size={22} color="#333" />
+          <span style={styles.iconLabel}>Lịch sử</span>
+        </Link>
+
         <Link to="/cart" className="cart-icon" style={styles.iconWrapper}>
           <ShoppingCart size={24} color="#333" />
           <span style={styles.cartBadge}>0</span>
@@ -85,6 +95,9 @@ const styles = {
   searchBox: { display: 'flex', alignItems: 'center', backgroundColor: '#f5f5f5', padding: '8px 15px', borderRadius: '20px' },
   searchInput: { border: 'none', backgroundColor: 'transparent', outline: 'none', paddingRight: '10px' },
   iconWrapper: { position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' },
+  iconLabelLink: { display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none', color: '#333', fontWeight: '600', padding: '8px 12px', borderRadius: '999px', transition: 'background 0.2s' },
+  iconLabelLinkHover: { backgroundColor: '#f5f5f5' },
+  iconLabel: { fontSize: '14px' },
   cartBadge: { position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#e74c3c', color: '#fff', borderRadius: '50%', padding: '2px 6px', fontSize: '10px', fontWeight: 'bold' },
   
   // Style mới cho cụm Profile
