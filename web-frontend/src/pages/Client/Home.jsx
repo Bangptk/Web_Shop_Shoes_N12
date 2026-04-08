@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const location = useLocation();
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios.get('http://localhost:5000/api/products')
       .then(res => setProducts(res.data))
@@ -23,25 +23,14 @@ const Home = () => {
 
   // 2. Hàm thêm vào giỏ hàng (Chỉ dành cho nút "Thêm vào giỏ")
   const addToCart = (product) => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingItem = cart.find(item => item.id === product.id);
-    
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('storage')); 
-    alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+    navigate(`/product/${product.id}`); 
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '20px' }}>
       {/* Banner */}
       <div style={styles.banner}>
-        <h1 style={{ fontSize: '3.5rem', margin: 0, fontWeight: '900', letterSpacing: '-2px' }}>NEW ARRIVALS</h1>
+        <h1 style={{ fontSize: '3.5rem', margin: 0, fontWeight: '800', letterSpacing: '-2px' }}>THỜI TRANG PHONG CÁCH</h1>
         <p style={{ fontSize: '1.2rem', color: '#555' }}>Khám phá bộ sưu tập giày Hot nhất 2026</p>
       </div>
 
