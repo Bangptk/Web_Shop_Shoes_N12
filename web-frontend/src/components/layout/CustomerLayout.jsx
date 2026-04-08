@@ -59,6 +59,7 @@ const CustomerLayout = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    window.dispatchEvent(new Event('storage'));
     setUser(null);
     setIsDropdownOpen(false); 
     navigate('/');
