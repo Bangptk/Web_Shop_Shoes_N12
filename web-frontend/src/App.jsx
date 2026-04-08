@@ -8,6 +8,7 @@ import Dashboard from './pages/Admin/Dashboard';
 import ProductManagement from './pages/Admin/ProductManagement';
 import OrderManagement from './pages/Admin/OrderManagement';
 import CategoryManagement from './pages/Admin/CategoryManagement';
+import DiscountManagement from './pages/Admin/DiscountManagement';
 
 // Pages Client
 import Auth from './pages/Client/Auth';
@@ -57,6 +58,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<ProductManagement />} />
+          <Route path="discounts" element={<DiscountManagement />} />
           <Route path="orders" element={<OrderManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
         </Route>
