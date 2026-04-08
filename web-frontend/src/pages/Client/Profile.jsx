@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile, isAuthenticated } from '../../api/authApi'; 
 
 const Profile = () => {
-    const [profile, setProfile] = useState({ fullname: '', email: '', phone: '', address: '', avatar: '', role: '' });
+    const [profile, setProfile] = useState({ fullname: '', email: '', phone: '', address: '',city: '', savatar: '', role: '' });
     const [avatarFile, setAvatarFile] = useState(null); 
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ const Profile = () => {
             else if (!nameRegex.test(value)) errorMsg = "Họ tên không hợp lệ (Không chứa số hay ký tự đặc biệt).";
         }
         if (name === 'phone') {
-            const cleanPhone = value.replace(/[\s\-]/g, ''); 
+            const cleanPhone = value.replace(/[\s-]/g, ''); 
             const phoneRegex = /^\+?[0-9]{7,15}$/;
             if (value.trim() !== '' && !phoneRegex.test(cleanPhone)) {
                 errorMsg = "Số điện thoại không hợp lệ (Phải từ 7 đến 15 số, có thể bắt đầu bằng +).";
@@ -105,13 +105,21 @@ const Profile = () => {
             formData.append('fullname', profile.fullname);
             formData.append('phone', profile.phone || '');
             formData.append('address', profile.address || '');
+            formData.append('city', profile.city || '');
             if (profile.avatar) formData.append('existing_avatar', profile.avatar);
             if (avatarFile) formData.append('avatar', avatarFile);
 
             const res = await updateProfile(formData); 
             
             const currentUser = JSON.parse(localStorage.getItem('user'));
-            const updatedUser = { ...currentUser, fullname: profile.fullname, avatar: res.avatar || profile.avatar };
+            const updatedUser = { 
+                ...currentUser,
+                fullname: profile.fullname,
+                phone: profile.phone,
+                address: profile.address,
+                city: profile.city,
+                avatar: res.avatar || profile.avatar
+                };
             localStorage.setItem('user', JSON.stringify(updatedUser));
             window.dispatchEvent(new Event('storage'));
 
@@ -126,6 +134,7 @@ const Profile = () => {
             loadProfile(); 
 
         } catch (error) {
+            console.error(error);
             setErrors({ ...errors, submit: "Lỗi hệ thống! Không thể cập nhật lúc này." });
         }
     };
@@ -212,6 +221,19 @@ const Profile = () => {
                     <div style={styles.field}>
                         <label style={styles.label}>Địa chỉ giao hàng</label>
                         <textarea name="address" value={profile.address || ''} onChange={handleInputChange} disabled={!isEditing} style={isEditing ? styles.textarea : styles.textareaDisabled} rows="3" placeholder={isEditing ? "Nhập địa chỉ của bạn..." : "Chưa cập nhật"} />
+                    </div>
+                    
+                    <div style={styles.field}>
+                        <label style={styles.label}>Thành phố</label>
+                        <input
+                            type="text"
+                            name="city"
+                            value={profile.city || ''}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            placeholder={isEditing ? "Nhập thành phố..." : "Chưa cập nhật"}
+                            style={isEditing ? styles.input : styles.inputDisabled}
+                        />
                     </div>
 
                     <div style={styles.buttonGroup}>
