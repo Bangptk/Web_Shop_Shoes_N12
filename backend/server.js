@@ -94,8 +94,19 @@ app.use('/api/user', require('./routes/user')); // Gọi userController (Profile
 
 // --- [PRODUCT] QUẢN LÝ SẢN PHẨM ---
 app.get('/api/products', (req, res) => {
-    const sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC";
-    db.query(sql, (err, results) => {
+    let sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id";
+    let params = [];
+    
+    // Filter theo category_id nếu có query string
+    const categoryId = req.query.category_id;
+    if (categoryId) {
+        sql += " WHERE p.category_id = ?";
+        params.push(categoryId);
+    }
+    
+    sql += " ORDER BY p.id DESC";
+    
+    db.query(sql, params, (err, results) => {
         if (err) return res.status(500).json(err);
         const products = results.map(product => ({
             ...product,

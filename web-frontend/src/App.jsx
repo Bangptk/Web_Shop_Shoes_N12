@@ -13,6 +13,7 @@ import DiscountManagement from './pages/Admin/DiscountManagement';
 // Pages Client
 import Auth from './pages/Client/Auth';
 import Home from './pages/Client/Home';
+import Brands from './pages/Client/Brands';
 import ProductDetail from './pages/Client/ProductDetail'; 
 import Cart from './pages/Client/Cart';
 import Checkout from './pages/Client/Checkout';
@@ -37,6 +38,7 @@ function App() {
           {/* Trang chủ hiển thị mặc định */}
           <Route index element={<Home />} /> 
 
+          <Route path="brands" element={<Brands />} />
           <Route path="product/:id" element={<ProductDetail />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
