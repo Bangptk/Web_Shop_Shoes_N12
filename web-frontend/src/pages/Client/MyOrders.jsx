@@ -76,7 +76,7 @@ const MyOrders = () => {
         </div>
 
         {/* CỘT PHẢI: CHI TIẾT SẢN PHẨM TRONG ĐƠN */}
-        <div style={styles.detailSection}>
+        {/* <div style={styles.detailSection}>
           <h3 style={{marginTop: 0, borderBottom: '2px solid #eee', paddingBottom: '10px'}}>
             Chi tiết mặt hàng
           </h3>
@@ -104,7 +104,7 @@ const MyOrders = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
