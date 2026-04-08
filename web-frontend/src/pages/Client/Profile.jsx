@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile, isAuthenticated } from '../../api/authApi'; 
 
 const Profile = () => {
-    const [profile, setProfile] = useState({ fullname: '', email: '', phone: '', address: '', avatar: '', role: '' });
+    const [profile, setProfile] = useState({ fullname: '', email: '', phone: '', address: '',city: '', savatar: '', role: '' });
     const [avatarFile, setAvatarFile] = useState(null); 
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -101,6 +101,7 @@ const Profile = () => {
             formData.append('fullname', profile.fullname);
             formData.append('phone', profile.phone || '');
             formData.append('address', profile.address || '');
+            formData.append('city', profile.city || '');
             if (profile.avatar) formData.append('existing_avatar', profile.avatar);
             if (avatarFile) formData.append('avatar', avatarFile);
 
@@ -186,6 +187,19 @@ const Profile = () => {
                     <div style={styles.field}>
                         <label style={styles.label}>Địa chỉ giao hàng</label>
                         <textarea name="address" value={profile.address || ''} onChange={handleInputChange} disabled={!isEditing} style={isEditing ? styles.textarea : styles.textareaDisabled} rows="3" placeholder={isEditing ? "Nhập địa chỉ của bạn..." : "Chưa cập nhật"} />
+                    </div>
+                    
+                    <div style={styles.field}>
+                        <label style={styles.label}>Thành phố</label>
+                        <input
+                            type="text"
+                            name="city"
+                            value={profile.city || ''}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            placeholder={isEditing ? "Nhập thành phố..." : "Chưa cập nhật"}
+                            style={isEditing ? styles.input : styles.inputDisabled}
+                        />
                     </div>
 
                     <div style={styles.buttonGroup}>

@@ -70,7 +70,6 @@ exports.login = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   const { fullname, phone, address, city } = req.body;
   const { id } = req.params;
-
   try {
     await db.execute(
       `UPDATE users SET fullname=?, phone=?, address=?, city=? WHERE id=?`,
