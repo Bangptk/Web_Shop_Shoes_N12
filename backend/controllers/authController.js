@@ -3,7 +3,9 @@ const db = require('../config/db'); // File cấu hình db dùng .promise()
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
+
+// LƯU Ý: Nhớ thay YOUR_GOOGLE_CLIENT_ID bằng mã thật của bạn ở 2 chỗ trong file này nhé!
+const client = new OAuth2Client('677343040491-ef2q2ntd7h9sgntmnebqoj32aqv04fr2.apps.googleusercontent.com');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 exports.register = async (req, res) => {
@@ -52,13 +54,13 @@ exports.login = async (req, res) => {
         const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
         
         if (rows.length > 0) {
-            const user = rows[0]; // FIX: Khai báo biến user lấy từ database
+            const user = rows[0]; 
             
             // 2. Dùng bcrypt để so sánh mật khẩu chữ thường với mật khẩu mã hóa trong DB
             const match = await bcrypt.compare(password, user.password);
             
             if (match) {
-                // 3. FIX: Tạo lại JWT Token để gửi về cho Frontend
+                // 3. Tạo lại JWT Token để gửi về cho Frontend
                 const token = jwt.sign(
                     { id: user.id, fullname: user.fullname, role: user.role }, 
                     JWT_SECRET, 
@@ -77,7 +79,7 @@ exports.login = async (req, res) => {
                         role: user.role,
                         avatar: user.avatar
                     },
-                    token: token // Phải trả cái này về thì frontend mới lưu được
+                    token: token 
                 });
             } else {
                 res.status(401).json({ message: "Mật khẩu không đúng" });
@@ -112,7 +114,7 @@ exports.googleLogin = async (req, res) => {
     // 1. Xác thực Token với Google
     const ticket = await client.verifyIdToken({
       idToken: credential,
-      audience: 'YOUR_GOOGLE_CLIENT_ID',  
+      audience: '677343040491-ef2q2ntd7h9sgntmnebqoj32aqv04fr2.apps.googleusercontent.com', 
     });
     const payload = ticket.getPayload();
     
@@ -120,48 +122,67 @@ exports.googleLogin = async (req, res) => {
     const { email, name, picture } = payload; 
 
     // 2. Kiểm tra xem user này đã có trong database chưa
-    const checkUserQuery = 'SELECT * FROM users WHERE email = ?';
-    db.query(checkUserQuery, [email], (err, results) => {
-      if (err) return res.status(500).json({ success: false, message: "Lỗi Server" });
+    const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
 
-      if (results.length > 0) {
+    if (rows.length > 0) {
         // TRƯỜNG HỢP 1: User đã tồn tại -> Trả về thông tin đăng nhập luôn
-        const existingUser = results[0];
-        // Tạo JWT Token của hệ thống bạn ở đây (giống hàm login bình thường)
-        // const token = jwt.sign(...); 
+        const existingUser = rows[0];
+        
+        // Tạo JWT Token 
+        const token = jwt.sign(
+            { id: existingUser.id, fullname: existingUser.fullname, role: existingUser.role }, 
+            JWT_SECRET, 
+            { expiresIn: '1d' }
+        );
         
         return res.json({
-          success: true,
-          message: "Đăng nhập Google thành công",
-          user: existingUser,
-          // token: token 
+            success: true,
+            message: "Đăng nhập Google thành công",
+            user: {
+                id: existingUser.id,
+                fullname: existingUser.fullname,
+                email: existingUser.email,
+                phone: existingUser.phone,
+                address: existingUser.address,
+                city: existingUser.city,
+                role: existingUser.role,
+                avatar: existingUser.avatar
+            },
+            token: token 
         });
-      } else {
+    } else {
         // TRƯỜNG HỢP 2: User chưa tồn tại -> Thêm mới vào MySQL
-        // Password có thể để chuỗi ngẫu nhiên hoặc rỗng vì họ đăng nhập bằng GG
-        const insertUserQuery = 'INSERT INTO users (fullname, email, avatar, role, password) VALUES (?, ?, ?, ?, ?)';
-        const newUserData = [name, email, picture, 'customer', 'google_sso_random_pass'];
+        // Tạo một mật khẩu ngẫu nhiên và băm nó ra để bảo mật
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const hashedRandomPassword = await bcrypt.hash(randomPassword, 10);
 
-        db.query(insertUserQuery, newUserData, (insertErr, insertResult) => {
-          if (insertErr) return res.status(500).json({ success: false, message: "Lỗi khi tạo user mới" });
+        const [insertResult] = await db.execute(
+            'INSERT INTO users (fullname, email, avatar, role, password) VALUES (?, ?, ?, ?, ?)',
+            [name, email, picture, 'customer', hashedRandomPassword]
+        );
 
-          const newUser = {
+        const newUser = {
             id: insertResult.insertId,
             fullname: name,
             email: email,
             avatar: picture,
             role: 'customer'
-          };
+        };
 
-          return res.json({
+        // Tạo JWT Token cho user mới
+        const token = jwt.sign(
+            { id: newUser.id, fullname: newUser.fullname, role: newUser.role }, 
+            JWT_SECRET, 
+            { expiresIn: '1d' }
+        );
+
+        return res.json({
             success: true,
             message: "Tạo tài khoản bằng Google thành công",
             user: newUser,
-            // token: token
-          });
+            token: token
         });
-      }
-    });
+    }
   } catch (error) {
     console.error("Lỗi Google Auth:", error);
     res.status(401).json({ success: false, message: "Xác thực Google thất bại" });

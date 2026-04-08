@@ -81,7 +81,7 @@ const LoginPage = () => {
 
         <button type="submit">Login</button>
       </form>
-
+    
       {/* 3. NÚT ĐĂNG NHẬP GOOGLE */}
       <div style={{ maxWidth: '300px', display: 'flex', justifyContent: 'center' }}>
         <GoogleLogin
@@ -90,7 +90,6 @@ const LoginPage = () => {
             console.log('Đăng nhập Google thất bại');
             alert('Có lỗi xảy ra khi kết nối với Google!');
           }}
-          // useOneTap // Bỏ comment dòng này nếu bạn muốn hiện popup đăng nhập một chạm góc phải màn hình
         />
       </div>
     </div>
